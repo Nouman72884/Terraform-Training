@@ -11,53 +11,53 @@ resource "aws_vpc" "vpc" {
   enable_dns_support   = "true"
   enable_dns_hostnames = "true"
   tags = {
-    Name = "${terraform.workspace}-vpc"
+    Name = "${terraform.workspace}-${var.VPC_MODULE_NAME}"
   }
 }
 
 # Subnets
 resource "aws_subnet" "public-subnet-1" {
   vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = var.PUBLIC_SUBNET_1_CIDR
+  cidr_block              = var.PUBLIC_SUBNET[0]
   map_public_ip_on_launch = "true"
   availability_zone       = data.aws_availability_zones.available.names[0]
 
   tags = {
-    Name = "${terraform.workspace}-public-subnet-1"
+    Name = "${terraform.workspace}-${var.VPC_MODULE_NAME}-public-subnet-1"
   }
 }
 
 resource "aws_subnet" "public-subnet-2" {
   vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = var.PUBLIC_SUBNET_2_CIDR
+  cidr_block              = var.PUBLIC_SUBNET[1]
   map_public_ip_on_launch = "true"
   availability_zone       = data.aws_availability_zones.available.names[1]
 
   tags = {
-    Name = "${terraform.workspace}-public-subnet-2"
+    Name = "${terraform.workspace}-${var.VPC_MODULE_NAME}-public-subnet-2"
   }
 }
 
 
 resource "aws_subnet" "private-subnet-1" {
   vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = var.PRIVATE_SUBNET_1_CIDR
+  cidr_block              = var.PRIVATE_SUBNET[0]
   map_public_ip_on_launch = "false"
   availability_zone       = data.aws_availability_zones.available.names[0]
 
   tags = {
-    Name = "${terraform.workspace}-private-subnet-1"
+    Name = "${terraform.workspace}-${var.VPC_MODULE_NAME}-private-subnet-1"
   }
 }
 
 resource "aws_subnet" "private-subnet-2" {
   vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = var.PRIVATE_SUBNET_2_CIDR
+  cidr_block              = var.PRIVATE_SUBNET[1]
   map_public_ip_on_launch = "false"
   availability_zone       = data.aws_availability_zones.available.names[1]
 
   tags = {
-    Name = "${terraform.workspace}-private-subnet-2"
+    Name = "${terraform.workspace}-${var.VPC_MODULE_NAME}-private-subnet-2"
   }
 }
 
@@ -66,7 +66,7 @@ resource "aws_internet_gateway" "vpc-gw" {
   vpc_id = aws_vpc.vpc.id
 
   tags = {
-    Name = "${terraform.workspace}-vpc-gw"
+    Name = "${terraform.workspace}-${var.VPC_MODULE_NAME}-gw"
   }
 }
 
@@ -79,7 +79,7 @@ resource "aws_route_table" "public-route-table" {
   }
 
   tags = {
-    Name = "${terraform.workspace}-public-route-table"
+    Name = "${terraform.workspace}-${var.VPC_MODULE_NAME}-public-route-table"
   }
 }
 

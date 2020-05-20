@@ -6,7 +6,7 @@ variable "AMIS"{
    }
 }
 variable "AWS_INSTANCE_TYPE" {}
-variable "INSTANCE_NAME" {}
+variable "EC2_MODULE_NAME" {}
 variable "KEYPAIR_NAME" {}
 variable "private-subnet-1-id" {}
 variable "vpc-id" {}

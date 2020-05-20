@@ -1,6 +1,6 @@
 resource "aws_security_group" "instance-security-group" {
   vpc_id      = aws_vpc.vpc.id
-  name        = "${terraform.workspace}-${var.SECURITY_GROUP_NAME}"
+  name        = "${terraform.workspace}-${var.VPC_MODULE_NAME}-SG"
   description = "security group that allows all ingress and all egress traffic"
   egress {
     from_port   = 0
@@ -16,7 +16,7 @@ resource "aws_security_group" "instance-security-group" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   tags = {
-    Name = "${terraform.workspace}-${var.SECURITY_GROUP_NAME}"
+    Name = "${terraform.workspace}-${var.VPC_MODULE_NAME}-SG"
   }
 }
 

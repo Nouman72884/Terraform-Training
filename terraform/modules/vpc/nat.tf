@@ -5,10 +5,10 @@ resource "aws_eip" "nat" {
 
 resource "aws_nat_gateway" "nat-gw" {
   allocation_id = aws_eip.nat.id
-  subnet_id     = aws_subnet.public-subnet-1.id
+  subnet_id     =  aws_subnet.public-subnets[0].id
   depends_on    = [aws_internet_gateway.vpc-gw]
   tags = {
-    Name = "${terraform.workspace}-${var.VPC_MODULE_NAME}-nat-gw"
+    Name = "${terraform.workspace}-${var.NAME}-nat-gw"
 }
 }
 # VPC setup for NAT
@@ -20,18 +20,14 @@ resource "aws_route_table" "private-route-table" {
   }
 
   tags = {
-    Name = "${terraform.workspace}-${var.VPC_MODULE_NAME}-private-route-table"
+    Name = "${terraform.workspace}-${var.NAME}-private-route-table"
   }
 }
 
 # route associations private
-resource "aws_route_table_association" "private-subnet-1-a" {
-  subnet_id      = aws_subnet.private-subnet-1.id
-  route_table_id = aws_route_table.private-route-table.id
-}
-
-resource "aws_route_table_association" "private-subnet-2-b" {
-  subnet_id      = aws_subnet.private-subnet-2.id
+resource "aws_route_table_association" "private-subnets" {
+  count = length(var.PRIVATE_SUBNET)
+  subnet_id      =  aws_subnet.private-subnets[count.index].id
   route_table_id = aws_route_table.private-route-table.id
 }
 

@@ -3,7 +3,7 @@ data "aws_availability_zones" "available" {
   state = "available"
 }
 locals {
-  az_length = "length(data.aws_availability_zones.available.names)"
+  az_length = length(data.aws_availability_zones.available.names)
 }
 # Internet VPC
 resource "aws_vpc" "vpc" {
@@ -22,7 +22,7 @@ resource "aws_subnet" "public-subnets" {
   vpc_id                  = aws_vpc.vpc.id
   cidr_block              = var.PUBLIC_SUBNET[count.index]
   map_public_ip_on_launch = "true"
-  availability_zone       = count.index > length(local.az_length) ? local.az_length[count.index] : null
+  availability_zone       = count.index > local.az_length ? local.az_length[count.index] : null
 
   tags = {
     Name = "${terraform.workspace}-${var.NAME}-public-subnet-${count.index}"
@@ -35,7 +35,7 @@ resource "aws_subnet" "private-subnets" {
   vpc_id                  = aws_vpc.vpc.id
   cidr_block              = var.PRIVATE_SUBNET[count.index]
   map_public_ip_on_launch = "false"
-  availability_zone       = count.index > length(local.az_length) ? local.az_length[count.index] : null
+  availability_zone       = count.index > local.az_length ? local.az_length[count.index] : null
 
   tags = {
     Name = "${terraform.workspace}-${var.NAME}-private-subnet-${count.index}"

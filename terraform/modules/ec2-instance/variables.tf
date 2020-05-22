@@ -6,9 +6,11 @@ variable "AMIS"{
    }
 }
 variable "AWS_INSTANCE_TYPE" {}
-variable "INSTANCE_NAME" {}
 variable "KEYPAIR_NAME" {}
-variable "private-subnet-1-id" {}
+variable "private-subnets-id" {}
 variable "vpc-id" {}
 variable "instance-security-group-id" {}
+variable "NAME" {
+  default = "ec2"
+}
 

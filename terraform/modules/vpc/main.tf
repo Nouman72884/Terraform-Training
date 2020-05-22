@@ -2,8 +2,9 @@
 data "aws_availability_zones" "available" {
   state = "available"
 }
-
-
+locals {
+  az_length = length(data.aws_availability_zones.available.names)
+}
 # Internet VPC
 resource "aws_vpc" "vpc" {
   cidr_block           = var.VPC_CIDR
@@ -21,7 +22,7 @@ resource "aws_subnet" "public-subnets" {
   vpc_id                  = aws_vpc.vpc.id
   cidr_block              = var.PUBLIC_SUBNET[count.index]
   map_public_ip_on_launch = "true"
-  availability_zone       = data.aws_availability_zones.available.names[count.index]
+  availability_zone       = count.index > local.az_length ? local.az_length[count.index] : null
 
   tags = {
     Name = "${terraform.workspace}-${var.NAME}-public-subnet-${count.index}"
@@ -34,7 +35,7 @@ resource "aws_subnet" "private-subnets" {
   vpc_id                  = aws_vpc.vpc.id
   cidr_block              = var.PRIVATE_SUBNET[count.index]
   map_public_ip_on_launch = "false"
-  availability_zone       = data.aws_availability_zones.available.names[count.index]
+  availability_zone       = count.index > local.az_length ? local.az_length[count.index] : null
 
   tags = {
     Name = "${terraform.workspace}-${var.NAME}-private-subnet-${count.index}"
@@ -50,7 +51,7 @@ resource "aws_internet_gateway" "vpc-gw" {
   }
 }
 
-# route tables
+# public route tables
 resource "aws_route_table" "public-route-table" {
   vpc_id = aws_vpc.vpc.id
   route {
@@ -62,7 +63,33 @@ resource "aws_route_table" "public-route-table" {
     Name = "${terraform.workspace}-${var.NAME}-public-route-table"
   }
 }
+# VPC setup for NAT
+# nat gw
+resource "aws_eip" "nat" {
+  vpc = true
+}
 
+resource "aws_nat_gateway" "nat-gw" {
+  allocation_id = aws_eip.nat.id
+  subnet_id     =  aws_subnet.public-subnets[0].id
+  depends_on    = [aws_internet_gateway.vpc-gw]
+  tags = {
+    Name = "${terraform.workspace}-${var.NAME}-nat-gw"
+}
+}
+# private route table
+
+resource "aws_route_table" "private-route-table" {
+  vpc_id = aws_vpc.vpc.id
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.nat-gw.id
+  }
+
+  tags = {
+    Name = "${terraform.workspace}-${var.NAME}-private-route-table"
+  }
+}
 # route associations public
 resource "aws_route_table_association" "public-subnets" {
   count = length(var.PUBLIC_SUBNET)

@@ -4,7 +4,7 @@ terraform {
     key            = "state"
     encrypt        = true
     region         = "us-east-1"
-    dynamodb_table = "s3lock"
+    dynamodb_table = "tablename"
   }
 }
 

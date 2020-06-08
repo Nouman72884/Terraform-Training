@@ -60,7 +60,11 @@ resource "aws_security_group" "db-security-group" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   tags = {
+
     Name = "${terraform.workspace}-${var.NAME}-DB SG"
+
+    Name = "${terraform.workspace}-${var.NAME}-SG"
+
   }
 }
 

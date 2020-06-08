@@ -10,7 +10,9 @@ variable "KEYPAIR_NAME" {}
 variable "VPC_CIDR" {}
 variable "PUBLIC_SUBNET" {}
 variable "PRIVATE_SUBNET" {}
+
 variable "DB_NAME" {}
 variable "RDS_USERNAME" {}
 variable "RDS_PASSWORD" {}
+
 

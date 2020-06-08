@@ -5,6 +5,17 @@ module "vpc" {
   PUBLIC_SUBNET = var.PUBLIC_SUBNET
   PRIVATE_SUBNET = var.PRIVATE_SUBNET
 }
+module "ec2-instance" {
+  source                     = "./modules/ec2-instance"
+  private-subnet-1-id        = module.vpc.private-subnet-1-id
+  vpc-id                     = module.vpc.vpc-id
+  instance-security-group-id = module.vpc.instance-security-group-id
+  KEYPAIR_NAME               = var.KEYPAIR_NAME
+  AWS_REGION                 = var.AWS_REGION
+  AWS_INSTANCE_TYPE          = var.AWS_INSTANCE_TYPE
+  EC2_MODULE_NAME            = var.EC2_MODULE_NAME
+}
+
 module "alb" {
   source = "./modules/alb"
   vpc-id = module.vpc.vpc-id

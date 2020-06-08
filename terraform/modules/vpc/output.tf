@@ -19,10 +19,10 @@ output "db-security-group-id" {
 output "private-subnets-id" {
   value = "${aws_subnet.private-subnets[0].id}"
 }
-output "private-subnet-id-1" {
-  value = "${aws_subnet.private-subnets[0].id}"
+output "public-subnet-id-1" {
+  value = "${aws_subnet.public-subnets[0].id}"
 }
-output "private-subnet-id-2" {
-  value = "${aws_subnet.private-subnets[1].id}"
+output "public-subnet-id-2" {
+  value = "${aws_subnet.public-subnets[1].id}"
 }
 

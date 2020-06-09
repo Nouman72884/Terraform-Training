@@ -3,7 +3,7 @@ data "aws_availability_zones" "available" {
   state = "available"
 }
 locals {
-  az_length = length(data.aws_availability_zones.available.names)
+  az_length = data.aws_availability_zones.available.names
 }
 # Internet VPC
 resource "aws_vpc" "vpc" {
@@ -12,8 +12,6 @@ resource "aws_vpc" "vpc" {
   enable_dns_support   = "true"
   enable_dns_hostnames = "true"
   tags = {
-
-    Name = "${terraform.workspace}-${var.VPC_MODULE_NAME}"
     Name = "${terraform.workspace}-${var.NAME}"
   }
 }
@@ -22,66 +20,25 @@ resource "aws_vpc" "vpc" {
 resource "aws_subnet" "public-subnets" {
   count = length(var.PUBLIC_SUBNET)
   vpc_id                  = aws_vpc.vpc.id
-
-  cidr_block              = var.PUBLIC_SUBNET[0]
-
   cidr_block              = var.PUBLIC_SUBNET[count.index]
-
   map_public_ip_on_launch = "true"
-  availability_zone       = count.index > local.az_length ? local.az_length[count.index] : null
+  availability_zone       = count.index+1 <= length(local.az_length) ? local.az_length[count.index+1] : null
 
   tags = {
-
-    Name = "${terraform.workspace}-${var.VPC_MODULE_NAME}-public-subnet-1"
-  }
-}
-
-resource "aws_subnet" "public-subnet-2" {
-  vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = var.PUBLIC_SUBNET[1]
-  map_public_ip_on_launch = "true"
-  availability_zone       = data.aws_availability_zones.available.names[1]
-
-  tags = {
-    Name = "${terraform.workspace}-${var.VPC_MODULE_NAME}-public-subnet-2"
-  }
-}
-
-
-resource "aws_subnet" "private-subnet-1" {
-  vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = var.PRIVATE_SUBNET[0]
-  map_public_ip_on_launch = "false"
-  availability_zone       = data.aws_availability_zones.available.names[0]
-
-  tags = {
-    Name = "${terraform.workspace}-${var.VPC_MODULE_NAME}-private-subnet-1"
-  }
-}
-
     Name = "${terraform.workspace}-${var.NAME}-public-subnet-${count.index}"
   }
 }
 
 
-
 resource "aws_subnet" "private-subnets" {
   count = length(var.PRIVATE_SUBNET)
   vpc_id                  = aws_vpc.vpc.id
-
-  cidr_block              = var.PRIVATE_SUBNET[1]
-
   cidr_block              = var.PRIVATE_SUBNET[count.index]
-
   map_public_ip_on_launch = "false"
-  availability_zone       = count.index > local.az_length ? local.az_length[count.index] : null
+  availability_zone       = count.index+1 <= length(local.az_length) ? local.az_length[count.index+1] : null
 
   tags = {
-
-    Name = "${terraform.workspace}-${var.VPC_MODULE_NAME}-private-subnet-2"
-
     Name = "${terraform.workspace}-${var.NAME}-private-subnet-${count.index}"
-
   }
 }
 
@@ -90,11 +47,7 @@ resource "aws_internet_gateway" "vpc-gw" {
   vpc_id = aws_vpc.vpc.id
 
   tags = {
-
-    Name = "${terraform.workspace}-${var.VPC_MODULE_NAME}-gw"
-
     Name = "${terraform.workspace}-${var.NAME}-gw"
-
   }
 }
 
@@ -107,11 +60,7 @@ resource "aws_route_table" "public-route-table" {
   }
 
   tags = {
-
-    Name = "${terraform.workspace}-${var.VPC_MODULE_NAME}-public-route-table"
-
     Name = "${terraform.workspace}-${var.NAME}-public-route-table"
-
   }
 }
 # VPC setup for NAT

@@ -5,12 +5,15 @@ variable "AMIS"{
      "us-east-1" = "ami-085925f297f89fce1"
    }
 }
-variable "AWS_INSTANCE_TYPE" {}
 variable "KEYPAIR_NAME" {}
-variable "private-subnets-id" {}
-variable "vpc-id" {}
+variable "AWS_INSTANCE_TYPE" {}
 variable "instance-security-group-id" {}
 variable "NAME" {
-  default = "ec2"
+  default = "autoscaling"
 }
+variable "private-subnets" {}
+variable "rds_endpoint" {}
+variable "DB_NAME" {}
+variable "RDS_USERNAME" {}
+variable "RDS_PASSWORD" {}
 

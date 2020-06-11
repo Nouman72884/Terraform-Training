@@ -23,7 +23,8 @@ module "db" {
   DB_NAME = var.DB_NAME
   RDS_PASSWORD = var.RDS_PASSWORD
   RDS_USERNAME = var.RDS_USERNAME
-  private-subnet-id-1 = data.terraform_remote_state.vpc.outputs.private-subnet-id-1
-  private-subnet-id-2 = data.terraform_remote_state.vpc.outputs.private-subnet-id-2
+ # private-subnet-id-1 = data.terraform_remote_state.vpc.outputs.private-subnet-id-1
+ # private-subnet-id-2 = data.terraform_remote_state.vpc.outputs.private-subnet-id-2
+  private-subnets = data.terraform_remote_state.vpc.outputs.private-subnets
 }
 

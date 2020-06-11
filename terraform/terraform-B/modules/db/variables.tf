@@ -1,5 +1,5 @@
-variable "private-subnet-id-1" {}
-variable "private-subnet-id-2" {}
+variable "private-subnets" {}
+#variable "private-subnet-id-2" {}
 variable "db-security-group-id" {}
 variable "RDS_PASSWORD" {}
 variable "RDS_USERNAME" {}

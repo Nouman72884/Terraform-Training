@@ -43,7 +43,7 @@ resource "aws_launch_configuration" "launchconfig" {
 
 resource "aws_autoscaling_group" "autoscaling" {
   name                      = "${terraform.workspace}-${var.NAME}-autoscaling-group"
-  vpc_zone_identifier       = [var.private-subnets]
+  vpc_zone_identifier       = var.private-subnets
   #target_group_arn          = var.targetgroup-arn
   #availability_zones        = data.aws_availability_zones.available.names
   launch_configuration      = aws_launch_configuration.launchconfig.name

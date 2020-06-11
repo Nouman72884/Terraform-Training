@@ -1,7 +1,7 @@
 resource "aws_db_subnet_group" "db-subnet" {
   name        = "${terraform.workspace}-${var.NAME}-db-subnet"
   description = "RDS subnet group"
-  subnet_ids  = [var.private-subnet-id-1,var.private-subnet-id-2]
+  subnet_ids  = var.private-subnets
 }
 
 resource "aws_db_parameter_group" "db-parameters" {
